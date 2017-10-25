@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,
+    maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title>NATIVE</title>
+</head>
+<body>
+<div id="tt" style="width: 100%;font-size: 24px;background: red;">
+    点击扫码
+</div>
+<div id="res">
+    扫码结果：
+</div>
+<script>
+    document.getElementById("tt").addEventListener("click",function() {
+        sonic.scanQRCode("getQRcode");
+    })
+
+    function getQRcode(code) {
+        console.log(code);
+        document.getElementById("res").innerHTML = code;
+    }
+</script>
+
+</body>
+</html>
