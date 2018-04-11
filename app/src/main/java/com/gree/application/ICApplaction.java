@@ -1,6 +1,7 @@
 package com.gree.application;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * Created by XJ on 2016/6/27.
@@ -11,7 +12,7 @@ public class ICApplaction extends Application {
     /**
      * private
      */
-    private static ICApplaction context; //当前对象
+    public static Context mContext; //当前对象
     private static boolean isDebug = false;
     private static boolean isInitFinish = true;
 
@@ -21,6 +22,7 @@ public class ICApplaction extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext=this.getApplicationContext();
     }
 
     public static boolean getInifFinishTag() {

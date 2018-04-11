@@ -11,18 +11,60 @@
 <div id="tt" style="width: 100%;font-size: 24px;background: red;">
     点击扫码
 </div>
-<div id="res">
+<div id="res" style="width: 100%;font-size: 24px;background: green;">
     扫码结果：
 </div>
+
+<div id="ll" style="width: 100%;font-size: 24px;background: red;">
+    点击获取位置
+</div>
+<div id="11res" style="width: 100%;font-size: 24px;background: green;">
+    位置信息：
+</div>
+
+<div id="pp" style="width: 100%;font-size: 24px;background: red;">
+    点击微信支付
+</div>
+<div id="ppres" style="width: 100%;font-size: 24px;background: green;">
+    支付结果信息：
+</div>
+
+<div id="cc" style="width: 100%;font-size: 24px;background: red;">
+    清理
+</div>
 <script>
-    document.getElementById("tt").addEventListener("click",function() {
+    document.getElementById("tt").addEventListener("click", function() {
         sonic.scanQRCode("getQRcode");
     })
 
     function getQRcode(code) {
         console.log(code);
-        document.getElementById("res").innerHTML = code;
+        document.getElementById("res").innerHTML = '扫码结果：' + code;
     }
+
+    document.getElementById("ll").addEventListener("click", function() {
+        sonic.pubGetLocation("getLoca");
+    })
+
+    function getLoca(code) {
+        console.log(code);
+        document.getElementById("11res").innerHTML = '位置信息：' + code;
+    }
+
+    document.getElementById("pp").addEventListener("click", function() {
+        sonic.weChatPay("111","getPay");
+    })
+
+    function getPay(code) {
+        console.log(code);
+        document.getElementById("ppres").innerHTML = '支付结果：' + code;
+    }
+
+    document.getElementById("cc").addEventListener("click", function() {
+        document.getElementById("res").innerHTML = '扫码结果：';
+        document.getElementById("11res").innerHTML = '位置信息：';
+        document.getElementById("ppres").innerHTML = '支付结果：';
+    })
 </script>
 
 </body>

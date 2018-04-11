@@ -1,6 +1,7 @@
 package com.gree.icleaner.activity.qrcode.zbar;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ public class ZBarScanActivity extends AppCompatActivity implements QRCodeView.De
     private static final int REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY = 666;
 
     private QRCodeView mQRCodeView;
+    private Context mContext;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class ZBarScanActivity extends AppCompatActivity implements QRCodeView.De
 
         mQRCodeView = (ZBarView) findViewById(R.id.zbarview);
         mQRCodeView.setDelegate(this);
+        mContext = this;
     }
 
     @Override
@@ -67,9 +70,15 @@ public class ZBarScanActivity extends AppCompatActivity implements QRCodeView.De
     @Override
     public void onScanQRCodeSuccess(String result) {
         Log.i(TAG, "result:" + result);
+        Intent mIntent = new Intent();
+        mIntent.putExtra("code",result );
+        // 设置结果，并进行传送
+        this.setResult(0, mIntent);
+        this.finish();
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         vibrate();
         mQRCodeView.startSpot();
+
     }
 
     @Override
@@ -132,55 +141,6 @@ public class ZBarScanActivity extends AppCompatActivity implements QRCodeView.De
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // 识别图片中的二维码还有问题，占时不要用
-//        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_CHOOSE_QRCODE_FROM_GALLERY) {
-//            final String picturePath = BGAPhotoPickerActivity.getSelectedImages(data).get(0);
-//
-//            /*
-//            这里为了偷懒，就没有处理匿名 AsyncTask 内部类导致 Activity 泄漏的问题
-//            请开发在使用时自行处理匿名内部类导致Activity内存泄漏的问题，处理方式可参考 https://github.com/GeniusVJR/LearningNotes/blob/master/Part1/Android/Android%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E6%80%BB%E7%BB%93.md
-//             */
-//            new AsyncTask<Void, Void, String>() {
-//                @Override
-//                protected String doInBackground(Void... params) {
-//                    Bitmap bitmap = getDecodeAbleBitmap(picturePath);
-//                    int picw = bitmap.getWidth();
-//                    int pich = bitmap.getHeight();
-//                    int[] pix = new int[picw * pich];
-//                    byte[] pixytes = new byte[picw * pich];
-//                    bitmap.getPixels(pix, 0, picw, 0, 0, picw, pich);
-//                    int R, G, B, Y;
-//
-//                    for (int y = 0; y < pich; y++) {
-//                        for (int x = 0; x < picw; x++) {
-//                            int index = y * picw + x;
-//                            R = (pix[index] >> 16) & 0xff;     //bitwise shifting
-//                            G = (pix[index] >> 8) & 0xff;
-//                            B = pix[index] & 0xff;
-//
-//                            //R,G.B - Red, Green, Blue
-//                            //to restore the values after RGB modification, use
-//                            //next statement
-//                            pixytes[index] = (byte) (0xff000000 | (R << 16) | (G << 8) | B);
-//                        }
-//                    }
-//                    ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount());
-//                    byte[] data = new byte[(int) (bitmap.getHeight() * bitmap.getWidth() * 1.5)];
-//                    rgba2Yuv420(pixytes, data, bitmap.getWidth(), bitmap.getHeight());
-//                    return mQRCodeView.processData(data, bitmap.getWidth(), bitmap.getHeight(), true);
-//                }
-//
-//                @Override
-//                protected void onPostExecute(String result) {
-//                    if (TextUtils.isEmpty(result)) {
-//                        Toast.makeText(ZBarScanActivity.this, "未发现二维码", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(ZBarScanActivity.this, result, Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }.execute();
-//        }
     }
 
 

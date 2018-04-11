@@ -28,6 +28,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.gree.common.engine.ZXingHelper;
 import com.gree.icleaner.R;
 import com.gree.icleaner.activity.main.sonic.SonicJavaScriptInterface;
 import com.gree.icleaner.activity.main.sonic.SonicRuntimeImpl;
@@ -85,6 +86,7 @@ public class BrowserActivity extends Activity {
 //        String url = "http://mc.vip.qq.com/demo/indexv3";
 //        String url = "file:///android_asset/ic-h5/sonic-demo-index.html";
         String url = "file:///android_asset/ic-h5/test-native.html";
+//        String url = "http://common.diditaxi.com.cn/general/webEntry#/";
 
         int mode = BrowserActivity.MODE_SONIC;
         if (TextUtils.isEmpty(url) || -1 == mode) {
@@ -211,6 +213,12 @@ public class BrowserActivity extends Activity {
             sonicSession = null;
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        ZXingHelper.getInstance().addActivityResult(this,requestCode,resultCode,intent);
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     private static class OfflinePkgSessionConnection extends SonicSessionConnection {

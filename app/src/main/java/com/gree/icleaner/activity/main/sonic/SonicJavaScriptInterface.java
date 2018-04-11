@@ -14,13 +14,18 @@
 package com.gree.icleaner.activity.main.sonic;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.webkit.JavascriptInterface;
 
+import com.gree.common.engine.ZXingHelper;
+import com.gree.common.interfaces.OnRequestListener;
+import com.gree.common.utils.LocationUtils;
 import com.gree.common.utils.LogUtil;
+import com.gree.common.utils.WXPayUtils;
 import com.gree.icleaner.activity.main.BrowserActivity;
 import com.gree.icleaner.activity.qrcode.zbar.ZBarScanActivity;
 import com.tencent.sonic.sdk.SonicDiffDataCallback;
@@ -85,10 +90,22 @@ public class SonicJavaScriptInterface {
             Runnable callbackRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    mContext.startActivity(new Intent(mContext,ZBarScanActivity.class));
+                    Activity activity = (Activity) mContext;
+                    ZXingHelper.getInstance().toZXingActivity(activity);
+                    ZXingHelper.getInstance().setCallback(new OnRequestListener() {
+                        @Override
+                        public void onOk(String result) {
+                            LogUtil.e("code",result);
+                            String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString(result) + "')";
+                            sessionClient.getWebView().loadUrl(jsCode);
+                        }
 
-//                    String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString("xxx") + "')";
-//                    sessionClient.getWebView().loadUrl(jsCode);
+                        @Override
+                        public void onFail() {
+                        }
+                    });
+
+
                 }
             };
             if (Looper.getMainLooper() == Looper.myLooper()) {
@@ -98,6 +115,78 @@ public class SonicJavaScriptInterface {
             }
         }
     }
+
+    /**
+     * 微信支付
+     * @param verifyMsg 获取到的微信验证信息
+     * @param jsCallbackFunc 支付回调
+     */
+    @JavascriptInterface
+    public void weChatPay(final String verifyMsg,final String jsCallbackFunc) {
+        if (null != sessionClient) {
+            Runnable callbackRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Activity activity = (Activity) mContext;
+                    WXPayUtils.getInstance().setCallback(new OnRequestListener() {
+                        @Override
+                        public void onOk(String result) {
+                            LogUtil.e("weChatPay",result);
+                            String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString(result) + "')";
+                            try {
+                                sessionClient.getWebView().loadUrl(jsCode);
+                            }catch (Exception e){
+                                LogUtil.e("XXX",e.toString());
+                            }
+
+                        }
+
+                        @Override
+                        public void onFail() {
+                        }
+                    });
+                    WXPayUtils.getInstance().goToPay(verifyMsg,activity);
+                }
+
+            };
+            if (Looper.getMainLooper() == Looper.myLooper()) {
+                callbackRunnable.run();
+            } else {
+                new Handler(Looper.getMainLooper()).post(callbackRunnable);
+            }
+        }
+    }
+
+    @JavascriptInterface
+    public void pubGetLocation(final String jsCallbackFunc) {
+        if (null != sessionClient) {
+            Runnable callbackRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Activity activity = (Activity) mContext;
+                    LocationUtils.getInstance().setCallback(new OnRequestListener() {
+                        @Override
+                        public void onOk(String result) {
+                            LogUtil.e("location",result);
+                            String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString(result) + "')";
+                            sessionClient.getWebView().loadUrl(jsCode);
+                        }
+
+                        @Override
+                        public void onFail() {
+                        }
+                    });
+                    LocationUtils.getInstance().forLocation(activity);
+                }
+            };
+            if (Looper.getMainLooper() == Looper.myLooper()) {
+                callbackRunnable.run();
+            } else {
+                new Handler(Looper.getMainLooper()).post(callbackRunnable);
+            }
+        }
+    }
+
 
     @JavascriptInterface
     public String getPerformance() {
@@ -168,6 +257,7 @@ public class SonicJavaScriptInterface {
         }
         return out.toString();
     }
+
 
 
 }
