@@ -34,5 +34,5 @@ dependencies {
     compile 'cn.bingoogolapple:bga-qrcodecore:1.1.9@aar'
     compile 'cn.bingoogolapple:bga-zbar:1.1.9@aar'
 
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+//    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }

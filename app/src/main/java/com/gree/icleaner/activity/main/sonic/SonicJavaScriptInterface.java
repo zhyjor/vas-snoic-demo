@@ -25,7 +25,7 @@ import com.gree.common.engine.ZXingHelper;
 import com.gree.common.interfaces.OnRequestListener;
 import com.gree.common.utils.LocationUtils;
 import com.gree.common.utils.LogUtil;
-import com.gree.common.utils.WXPayUtils;
+//import com.gree.common.utils.WXPayUtils;
 import com.gree.icleaner.activity.main.BrowserActivity;
 import com.gree.icleaner.activity.qrcode.zbar.ZBarScanActivity;
 import com.tencent.sonic.sdk.SonicDiffDataCallback;
@@ -121,41 +121,41 @@ public class SonicJavaScriptInterface {
      * @param verifyMsg 获取到的微信验证信息
      * @param jsCallbackFunc 支付回调
      */
-    @JavascriptInterface
-    public void weChatPay(final String verifyMsg,final String jsCallbackFunc) {
-        if (null != sessionClient) {
-            Runnable callbackRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    Activity activity = (Activity) mContext;
-                    WXPayUtils.getInstance().setCallback(new OnRequestListener() {
-                        @Override
-                        public void onOk(String result) {
-                            LogUtil.e("weChatPay",result);
-                            String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString(result) + "')";
-                            try {
-                                sessionClient.getWebView().loadUrl(jsCode);
-                            }catch (Exception e){
-                                LogUtil.e("XXX",e.toString());
-                            }
-
-                        }
-
-                        @Override
-                        public void onFail() {
-                        }
-                    });
-                    WXPayUtils.getInstance().goToPay(verifyMsg,activity);
-                }
-
-            };
-            if (Looper.getMainLooper() == Looper.myLooper()) {
-                callbackRunnable.run();
-            } else {
-                new Handler(Looper.getMainLooper()).post(callbackRunnable);
-            }
-        }
-    }
+//    @JavascriptInterface
+//    public void weChatPay(final String verifyMsg,final String jsCallbackFunc) {
+//        if (null != sessionClient) {
+//            Runnable callbackRunnable = new Runnable() {
+//                @Override
+//                public void run() {
+//                    Activity activity = (Activity) mContext;
+//                    WXPayUtils.getInstance().setCallback(new OnRequestListener() {
+//                        @Override
+//                        public void onOk(String result) {
+//                            LogUtil.e("weChatPay",result);
+//                            String jsCode = "javascript:" + jsCallbackFunc + "('" + toJsString(result) + "')";
+//                            try {
+//                                sessionClient.getWebView().loadUrl(jsCode);
+//                            }catch (Exception e){
+//                                LogUtil.e("XXX",e.toString());
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onFail() {
+//                        }
+//                    });
+//                    WXPayUtils.getInstance().goToPay(verifyMsg,activity);
+//                }
+//
+//            };
+//            if (Looper.getMainLooper() == Looper.myLooper()) {
+//                callbackRunnable.run();
+//            } else {
+//                new Handler(Looper.getMainLooper()).post(callbackRunnable);
+//            }
+//        }
+//    }
 
     @JavascriptInterface
     public void pubGetLocation(final String jsCallbackFunc) {

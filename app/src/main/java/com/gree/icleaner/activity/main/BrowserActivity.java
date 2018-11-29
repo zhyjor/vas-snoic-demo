@@ -85,7 +85,8 @@ public class BrowserActivity extends Activity {
 //        int mode = intent.getIntExtra(PARAM_MODE, -1);
 //        String url = "http://mc.vip.qq.com/demo/indexv3";
 //        String url = "file:///android_asset/ic-h5/sonic-demo-index.html";
-        String url = "file:///android_asset/ic-h5/test-native.html";
+//        String url = "file:///android_asset/ic-h5/test-native.html";
+        String url = "file:///android_asset/ic-h5/test/example/test-dialog.html";
 //        String url = "http://common.diditaxi.com.cn/general/webEntry#/";
 
         int mode = BrowserActivity.MODE_SONIC;
